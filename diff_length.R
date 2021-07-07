@@ -36,15 +36,18 @@ if (test %in% c("ks","w")) {
     stop(sprintf("Test %s not available yet, coming soon!",test))
 }
 
-#Input length data file and metadata file
+# Input length data file and metadata file
 data_file <- read.delim(data_path, header = TRUE, sep = delim)
 metadata <- read.delim(metadata_path, header = TRUE, sep = delim)
 
 #FIXME: Can omit this step if previous output names columns consistently
 colnames(data_file) = c("lib_id","name","length")
-colnames(metadata) = c("lib_id", "condition")
+colnames(metadata)[1:2] = c("lib_id", "condition")
 
-#Add condition column from metadata
+# Remove rows with reported length 0. They should not be there anyway.
+data_file = data_file[data_file$length > 0,]
+
+# Add condition column from metadata
 data_file$condition = sapply(data_file$lib_id, function(x) {metadata$condition[metadata$lib_id == x]})
 
 # Relevel data_file$condition to use baseline string
@@ -52,10 +55,9 @@ data_file = within(data_file, condition <- relevel(condition, ref = baseline))
 
 
 diff_length_single = function(data_file_sub, test, logscale = TRUE) {
-    #FIXME: tryCatch for potential errors
     out = c(NA,NA)
     if (logscale) {
-        data_file_sub$length = log2(data_file_sub$length+1)
+        data_file_sub$length = log2(data_file_sub$length)
         est_head = "log2FC"
     } else {
         est_head = "meandiff"
@@ -64,28 +66,27 @@ diff_length_single = function(data_file_sub, test, logscale = TRUE) {
         if (test == "t") {
             res = lm(length~condition, data = data_file_sub)
             out = summary(res)$coefficients[2,c(1,4)]
-            names(out) = c(est_head, "pvalue")            
         } else if (test == "m") {
             res = lme4::lmer(Y~condition + (1 | lib_id), data = data_file_sub)
             out = summary(res)$coefficients[2,c(1,3)]
             out[2] = 2*pt(abs(out[2]), df=nrow(data_file_sub)-2,lower.tail = FALSE)
-            names(out) = c(est_head, "pvalue")
-        }}
+        }} 
     ,
         error = {function(e) {warning(
+        #FIXME: Was supposed to also show which gene/transcript but cannot extract with current algorithm
             sprintf("Error: NAs given"))
         }}
     )
+    names(out) = c(est_head, "pvalue")
     
     return(out)
 }
 
 diff_length = function(data_file, test) {
-    #genes = names(table(data_file$id))
+    data_file_byname = split(data_file, data_file$name)
     
-    data_file_bygene = split(data_file, data_file[,2])
-    
-    out = lapply(data_file_bygene, function(d) {diff_length_single(d, test)})
+    # Loops over all subsets split by name
+    out = lapply(data_file_byname, function(d) {diff_length_single(d, test)})
     out = data.frame(do.call(rbind, out))
     out$qvalue = p.adjust(out$pvalue,method = "BH")
     return(out)
