@@ -96,8 +96,7 @@ outres = cbind(rownames(outres),outres)
 colnames(outres)[1] = "name"
 
 if (ofile == "stdout") {
-    outstring = readr::format_tsv(outres)
-    write(outstring,stdout())
+    write.table(outres,file=stdout(),sep = delim, quote = F, row.names = FALSE, col.names = TRUE)
 } else {
     write.table(outres, file = ofile,sep = delim, quote = F, row.names = FALSE, col.names = TRUE)
 }
