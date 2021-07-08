@@ -67,7 +67,7 @@ diff_length_single = function(data_file_sub, test, logscale = TRUE) {
             res = lm(length~condition, data = data_file_sub)
             out = summary(res)$coefficients[2,c(1,4)]
         } else if (test == "m") {
-            res = lme4::lmer(Y~condition + (1 | lib_id), data = data_file_sub)
+            res = lme4::lmer(length~condition + (1 | lib_id), data = data_file_sub)
             out = summary(res)$coefficients[2,c(1,3)]
             out[2] = 2*pt(abs(out[2]), df=nrow(data_file_sub)-2,lower.tail = FALSE)
         }} 
