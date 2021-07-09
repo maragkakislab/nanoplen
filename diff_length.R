@@ -2,6 +2,9 @@
 
 # Debug test:
 # dev/diff_length.R -d scratch/plen_test_data.tab -b "control" -l F -m scratch/plen_test_metadata.tab
+# dev/diff_length.R -d scratch/plen_test_data.tab -p zee -b "control" -l F -t m -m scratch/plen_test_metadata.tab
+# dev/diff_length.R -d scratch/plen_test_data.tab -p vee+tee*dee -m scratch/plen_test_metadata.tab
+
 
 suppressPackageStartupMessages(library(optparse))
 
@@ -16,13 +19,15 @@ option_list <- list(
                 help="String to specify baseline category [default %default]"),
     make_option(c("-l","--logscale"), default = "TRUE",
                 help="Convert length to log2 scale [default %default]"),
+    make_option(c("-p","--params"), default = NULL,
+                help="Extra parameters to use for using linear regression methods, separated by +, no spaces (example: time+age+age*time) [default %default]"),
     make_option(c("-o","--ofile"), default = "stdout",
                 help="Path to output file [default %default]")
 )
 #FIXME: option for custom model in the future
 opt <- parse_args(OptionParser(option_list = option_list))
 
-vars = c("data_path", "metadata_path","test","baseline","logscale","ofile")
+vars = c("data_path", "metadata_path","test","baseline","logscale","params", "ofile")
 for (i in 1:length(vars)) {
     assign(vars[i],opt[[vars[i]]])
 }
@@ -44,6 +49,15 @@ metadata <- read.delim(metadata_path, header = TRUE, sep = delim)
 colnames(data_file) = c("lib_id","name","length")
 colnames(metadata)[1:2] = c("lib_id", "condition")
 
+#FIXME: checking if model parameters are in metadata
+if (!is.null(params)) {
+    vars = unique(unlist(strsplit(strsplit(params,"\\+")[[1]], "\\*")))
+    vars_in_meta = vars %in% colnames(metadata)
+    if (!all(vars_in_meta)) {
+        stop(sprintf("Model parameters not in metadata: %s",paste(vars[!vars_in_meta], collapse = " ")))
+    }
+}
+
 # Remove rows with reported length 0. They should not be there anyway.
 data_file = data_file[data_file$length > 0,]
 
@@ -54,8 +68,9 @@ data_file$condition = sapply(data_file$lib_id, function(x) {metadata$condition[m
 data_file = within(data_file, condition <- relevel(condition, ref = baseline))
 
 
-diff_length_single = function(data_file_sub, test, logscale = TRUE) {
+diff_length_single = function(data_file_sub, test, params, logscale = TRUE) {
     out = c(NA,NA)
+    model = paste(c("length~condition",params),sep="+")
     if (logscale) {
         data_file_sub$length = log2(data_file_sub$length)
         est_head = "log2FC"
@@ -82,17 +97,17 @@ diff_length_single = function(data_file_sub, test, logscale = TRUE) {
     return(out)
 }
 
-diff_length = function(data_file, test) {
+diff_length = function(data_file, test, params) {
     data_file_byname = split(data_file, data_file$name)
     
     # Loops over all subsets split by name
-    out = lapply(data_file_byname, function(d) {diff_length_single(d, test)})
+    out = lapply(data_file_byname, function(d) {diff_length_single(d, test, params)})
     out = data.frame(do.call(rbind, out))
     out$qvalue = p.adjust(out$pvalue,method = "BH")
     return(out)
 }
 
-outres = diff_length(data_file, test)
+outres = diff_length(data_file, test, params)
 outres = cbind(rownames(outres),outres)
 colnames(outres)[1] = "name"
 
