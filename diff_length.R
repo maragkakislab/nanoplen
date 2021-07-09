@@ -4,6 +4,7 @@
 # dev/diff_length.R -d scratch/plen_test_data.tab -b "control" -l F -m scratch/plen_test_metadata.tab
 # dev/diff_length.R -d scratch/plen_test_data.tab -p zee -b "control" -l F -t m -m scratch/plen_test_metadata.tab
 # dev/diff_length.R -d scratch/plen_test_data.tab -p vee+tee*dee -m scratch/plen_test_metadata.tab
+# dev/diff_length.R -d scratch/plen_test_data.tab -p zee -b "control" -t w -m scratch/plen_test_metadata.tab
 
 
 suppressPackageStartupMessages(library(optparse))
@@ -14,7 +15,7 @@ option_list <- list(
     make_option(c("-m","--metadata_path"),
                 help="Path to metadata file, columns: library id, condition, [additional columns]"),
     make_option(c("-t","--test"), default = "t",
-                help="Statistical test to use (t:t-test, m:linear mixed model, ks:kolmogorov-smirov, w:wilcoxon) [default %default]"),
+                help="Statistical test to use (t:t-test, m:linear mixed model, w:wilcoxon) [default %default]"),
     make_option(c("-b","--baseline"), default = "Control",
                 help="String to specify baseline category [default %default]"),
     make_option(c("-l","--logscale"), default = "TRUE",
@@ -33,13 +34,10 @@ for (i in 1:length(vars)) {
 }
 delim <- "\t"  #Because this script is directly after nanoplen, we can control the output
  
-if (!(test %in% c("t","w","ks","m"))) {
-    stop(sprintf("Unsupported test: %s. Accepted options: t, m, w, ks", test))
+if (!(test %in% c("t","w","m"))) {
+    stop(sprintf("Unsupported test: %s. Accepted options: t, m, w", test))
 }
 
-if (test %in% c("ks","w")) {
-    stop(sprintf("Test %s not available yet, coming soon!",test))
-}
 
 # Input length data file and metadata file
 data_file <- read.delim(data_path, header = TRUE, sep = delim)
@@ -64,6 +62,12 @@ data_file = data_file[data_file$length > 0,]
 # Add condition column from metadata
 data_file$condition = sapply(data_file$lib_id, function(x) {metadata$condition[metadata$lib_id == x]})
 
+if (test == "w") {
+    levels = levels(metadata$condition)
+    if (length(levels)>2) {warning("More than two levels detected, Wilcox is only for two-level comparison!")}
+    if (!is.null(params)) {warning("Extra parameters not supported with Wilcoxon test!")}
+}
+
 # Relevel data_file$condition to use baseline string
 data_file = within(data_file, condition <- relevel(condition, ref = baseline))
 
@@ -85,7 +89,27 @@ diff_length_single = function(data_file_sub, test, params, logscale = TRUE) {
             res = lme4::lmer(length~condition + (1 | lib_id), data = data_file_sub)
             out = summary(res)$coefficients[2,c(1,3)]
             out[2] = 2*pt(abs(out[2]), df=nrow(data_file_sub)-2,lower.tail = FALSE)
-        }} 
+        } else if (test == "w") {
+            levels = levels(data_file_sub$condition)
+            x = data_file_sub$length[data_file_sub$condition == levels[1]]
+            # Supposed to only have two levels, but just in case
+            y = data_file_sub$length[data_file_sub$condition != levels[1]]
+            # Code from wilcox.test.default
+            r <- rank(c(x, y))
+            n.x <- as.double(length(x))
+            n.y <- as.double(length(y))
+            STATISTIC <- c(W = sum(r[seq_along(x)]) - n.x * (n.x + 1)/2)
+            NTIES <- table(r)
+            z <- STATISTIC - n.x * n.y/2
+            SIGMA <- sqrt((n.x * n.y/12) * ((n.x + n.y + 1) - 
+                                    sum(NTIES^3 - NTIES)/((n.x + n.y) * (n.x + n.y - 
+                                                                         1))))
+            z = z/SIGMA
+            r_pval = 2 * min(stats::pnorm(z),
+                             stats::pnorm(z, lower.tail = FALSE))  
+            out = c(z, r_pval)
+            est_head = "Wilcox_stat"
+        }}
     ,
         error = {function(e) {warning(
         #FIXME: Was supposed to also show which gene/transcript but cannot extract with current algorithm
