@@ -107,7 +107,7 @@ diff_length_single = function(data_file_sub, test, params, logscale = TRUE) {
             z = z/SIGMA
             r_pval = 2 * min(stats::pnorm(z),
                              stats::pnorm(z, lower.tail = FALSE))  
-            out = c(z, r_pval)
+            out = c(STATISTIC, r_pval)
             est_head = "Wilcox_stat"
         }}
     ,
