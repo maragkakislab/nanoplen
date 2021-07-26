@@ -60,7 +60,7 @@ if (!is.null(params)) {
 data_file = data_file[data_file$length > 0,]
 
 # Add condition column from metadata
-data_file$condition = sapply(data_file$lib_id, function(x) {metadata$condition[as.character(metadata$lib_id) == x]})
+data_file = merge(data_file, metadata, by="lib_id")[,1:4]
 
 if (test == "w") {
     levels = levels(metadata$condition)
