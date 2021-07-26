@@ -18,7 +18,7 @@ option_list <- list(
                 help="Statistical test to use (t:t-test, m:linear mixed model, w:wilcoxon) [default %default]"),
     make_option(c("-b","--baseline"), default = "Control",
                 help="String to specify baseline category [default %default]"),
-    make_option(c("-l","--logscale"), default = "TRUE",
+    make_option(c("-l","--logscale"), action='store_true', default=FALSE,
                 help="Convert length to log2 scale [default %default]"),
     make_option(c("-p","--params"), default = NULL,
                 help="Extra parameters to use for using linear regression methods, separated by +, no spaces (example: time+age+age*time) [default %default]"),
@@ -125,7 +125,7 @@ diff_length = function(data_file, test, params) {
     data_file_byname = split(data_file, data_file$name)
     
     # Loops over all subsets split by name
-    out = lapply(data_file_byname, function(d) {diff_length_single(d, test, params)})
+    out = lapply(data_file_byname, function(d) {diff_length_single(d, test, params, logscale)})
     out = data.frame(do.call(rbind, out))
     out$qvalue = p.adjust(out$pvalue,method = "BH")
     return(out)
