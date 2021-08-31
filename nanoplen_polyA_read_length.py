@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 """
-Reads the nanopolish output file and prints the reference sequence-id and the
+Reads the nanopolish output file, prints the reference sequence-id and the
 poly-A length for each "PASS" mapped read and polyA length greaterthan equalto
- 1. An additional column will be printed at the beginning via the  agrgument
- '--opt-col-name', with values in rows from argument '--opt-col-val'.
+1. An additional column will be printed at the beginning via the  argument
+'--opt-col-name', and values in its rows from argument '--opt-col-val'.
 """
 
 import sys
