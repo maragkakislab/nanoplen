@@ -41,12 +41,11 @@ df = df.drop('qc_tag', 1)
 # Add extra column (optional) provided by user
 if args.opt_col_name and args.opt_col_val:
     df.insert(0, args.opt_col_name, args.opt_col_val)
-    df_out = df.copy(deep=True)
 elif not args.opt_col_name and not args.opt_col_val:
-    df_out = df.copy(deep=True)
+    pass
 else:
-    print("Please provide input for either none or both optional agruments")
+    print("Please provide input for for both or none optional agruments")
     print(sys.exit(1))
 
 #Print the output to std-out
-df_out.to_csv(sys.stdout, sep=args.delimiter, index=False)
+df.to_csv(sys.stdout, sep=args.delimiter, index=False)
