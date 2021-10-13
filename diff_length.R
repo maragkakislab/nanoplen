@@ -1,10 +1,10 @@
 #!/usr/bin/env Rscript
 
 # Debug test:
-# dev/diff_length.R -d scratch/plen_test_data.tab -b "control" -l F -m scratch/plen_test_metadata.tab
-# dev/diff_length.R -d scratch/plen_test_data.tab -p zee -b "control" -l F -t m -m scratch/plen_test_metadata.tab
-# dev/diff_length.R -d scratch/plen_test_data.tab -p vee+tee*dee -m scratch/plen_test_metadata.tab
-# dev/diff_length.R -d scratch/plen_test_data.tab -p zee -b "control" -t w -m scratch/plen_test_metadata.tab
+# dev/nanoplen/diff_length.R -d scratch/plen_test_data.tab -b "control" -l F -m scratch/plen_test_metadata.tab
+# dev/nanoplen/diff_length.R -d scratch/plen_test_data.tab -p zee -b "control" -l F -t m -m scratch/plen_test_metadata.tab
+# dev/nanoplen/diff_length.R -d scratch/plen_test_data.tab -p vee+tee*dee -m scratch/plen_test_metadata.tab
+# dev/nanoplen/diff_length.R -d scratch/plen_test_data.tab -p zee -b "control" -t w -m scratch/plen_test_metadata.tab
 
 
 suppressPackageStartupMessages(library(optparse))
@@ -25,7 +25,6 @@ option_list <- list(
     make_option(c("-o","--ofile"), default = "stdout",
                 help="Path to output file [default %default]")
 )
-#FIXME: option for custom model in the future
 opt <- parse_args(OptionParser(option_list = option_list))
 
 vars = c("data_path", "metadata_path","test","baseline","logscale","params", "ofile")
@@ -43,11 +42,11 @@ if (!(test %in% c("t","w","m"))) {
 data_file <- read.delim(data_path, header = TRUE, sep = delim)
 metadata <- read.delim(metadata_path, header = TRUE, sep = delim)
 
-#FIXME: Can omit this step if previous output names columns consistently
+# Can omit this step if previous output names columns consistently
 colnames(data_file) = c("lib_id","name","length")
 colnames(metadata)[1:2] = c("lib_id", "condition")
 
-#FIXME: checking if model parameters are in metadata
+# checking if model parameters are in metadata
 if (!is.null(params)) {
     vars = unique(unlist(strsplit(strsplit(params,"\\+")[[1]], "\\*")))
     vars_in_meta = vars %in% colnames(metadata)
@@ -71,8 +70,12 @@ if (test == "w") {
 # Relevel data_file$condition to use baseline string
 data_file = within(data_file, condition <- relevel(condition, ref = baseline))
 
+has_warning <<- FALSE
+wfile = ifelse(ofile == "stdout", "warnings.txt", sprintf("%s_warnings.txt", ofile))
+ww <- file(wfile, open = "wt")
+sink(ww, type = "message")
 
-diff_length_single = function(data_file_sub, test, params, logscale = TRUE) {
+diff_length_single = function(data_file_sub, test, params, logscale = TRUE, contig_name) {
     out = c(NA,NA)
     model = paste(c("length~condition",params),sep="+")
     if (logscale) {
@@ -107,13 +110,15 @@ diff_length_single = function(data_file_sub, test, params, logscale = TRUE) {
             z = z/SIGMA
             r_pval = 2 * min(stats::pnorm(z),
                              stats::pnorm(z, lower.tail = FALSE))  
-            out = c(STATISTIC, r_pval)
-            est_head = "Wilcox_stat"
+            l2f = log2(mean(y)/mean(x))
+            out = c(STATISTIC, l2f, r_pval)
+            est_head = c("Wilcox_stat","log2FC")
         }}
     ,
         error = {function(e) {warning(
         #FIXME: Was supposed to also show which gene/transcript but cannot extract with current algorithm
-            sprintf("Error: NAs given"))
+            sprintf("Error in %s: NAs given", contig_name))
+            has_warning <<- TRUE
         }}
     )
     names(out) = c(est_head, "pvalue")
@@ -125,7 +130,9 @@ diff_length = function(data_file, test, params) {
     data_file_byname = split(data_file, data_file$name)
     
     # Loops over all subsets split by name
-    out = lapply(data_file_byname, function(d) {diff_length_single(d, test, params, logscale)})
+    out = lapply(names(data_file_byname), 
+                 function(d) {diff_length_single(
+                     data_file_byname[[d]], test, params, logscale, d)})
     out = data.frame(do.call(rbind, out))
     out$qvalue = p.adjust(out$pvalue,method = "BH")
     return(out)
@@ -139,4 +146,10 @@ if (ofile == "stdout") {
     write.table(outres,file=stdout(),sep = delim, quote = F, row.names = FALSE, col.names = TRUE)
 } else {
     write.table(outres, file = ofile,sep = delim, quote = F, row.names = FALSE, col.names = TRUE)
+}
+
+sink(type="message")
+close(ww)
+if (has_warning) {
+    message(sprintf("Some tests errored, logged in %s", wfile))
 }
