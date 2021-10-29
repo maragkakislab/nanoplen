@@ -1,12 +1,5 @@
 #!/usr/bin/env Rscript
 
-# Debug test:
-# dev/nanoplen/diff_length.R -d scratch/plen_test_data.tab -b "control" -l F -m scratch/plen_test_metadata.tab
-# dev/nanoplen/diff_length.R -d scratch/plen_test_data.tab -p zee -b "control" -l F -t m -m scratch/plen_test_metadata.tab
-# dev/nanoplen/diff_length.R -d scratch/plen_test_data.tab -p vee+tee*dee -m scratch/plen_test_metadata.tab
-# dev/nanoplen/diff_length.R -d scratch/plen_test_data.tab -p zee -b "control" -t w -m scratch/plen_test_metadata.tab
-
-
 suppressPackageStartupMessages(library(optparse))
 
 option_list <- list(
@@ -18,7 +11,7 @@ option_list <- list(
                 help="Statistical test to use (t:t-test, m:linear mixed model, w:wilcoxon) [default %default]"),
     make_option(c("-b","--baseline"), default = "Control",
                 help="String to specify baseline category [default %default]"),
-    make_option(c("-l","--logscale"), default=FALSE,
+    make_option(c("-l","--logscale"), action = "store_true",  default=FALSE,
                 help="Convert length to log2 scale (TRUE/FALSE) [default %default]"),
     make_option(c("-p","--params"), default = NULL,
                 help="Extra parameters to use for using linear regression methods, separated by +, no spaces (example: time+age+age*time) [default %default]"),
@@ -105,8 +98,8 @@ diff_length_single = function(data_file_sub, test, params, logscale = TRUE, cont
             NTIES <- table(r)
             z <- STATISTIC - n.x * n.y/2
             SIGMA <- sqrt((n.x * n.y/12) * ((n.x + n.y + 1) - 
-                                    sum(NTIES^3 - NTIES)/((n.x + n.y) * (n.x + n.y - 
-                                                                         1))))
+                                                sum(NTIES^3 - NTIES)/((n.x + n.y) * (n.x + n.y - 
+                                                                                         1))))
             z = z/SIGMA
             r_pval = 2 * min(stats::pnorm(z),
                              stats::pnorm(z, lower.tail = FALSE))  
@@ -114,15 +107,26 @@ diff_length_single = function(data_file_sub, test, params, logscale = TRUE, cont
             out = c(STATISTIC, l2f, r_pval)
             est_head = c("Wilcox_stat","log2FC")
         }}
-    ,
+        ,
         error = {function(e) {warning(
-        #FIXME: Was supposed to also show which gene/transcript but cannot extract with current algorithm
+            #FIXME: Was supposed to also show which gene/transcript but cannot extract with current algorithm
             sprintf("Error in %s: NAs given", contig_name))
-            has_warning <<- TRUE
+            has_warning <<- TRUE 
         }}
     )
     names(out) = c(est_head, "pvalue")
     
+    return(out)
+}
+
+calc_descriptives = function(d) {
+    out = c(NA,NA,NA,NA)
+    
+    tryCatch({  
+        out = c(aggregate(d$length, list(d$condition), FUN = length)[,2],
+                aggregate(d$length, list(d$condition), FUN = mean)[,2])
+    }, error = function(e) { }
+    )
     return(out)
 }
 
@@ -135,6 +139,11 @@ diff_length = function(data_file, test, params) {
                      data_file_byname[[d]], test, params, logscale, d)})
     out = data.frame(do.call(rbind, out))
     out$qvalue = p.adjust(out$pvalue,method = "BH")
+    desc = lapply(names(data_file_byname),
+                  function(d) {calc_descriptives(data_file_byname[[d]])})
+    desc = data.frame(do.call(rbind, desc))
+    colnames(desc) = c("n.1","n.2","mean_length.1","mean_length.2")
+    out = cbind(out, desc)
     return(out)
 }
 
