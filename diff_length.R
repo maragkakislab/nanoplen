@@ -130,6 +130,7 @@ calc_descriptives = function(d) {
     return(out)
 }
 
+
 diff_length = function(data_file, test, params, b = baseline) {
     data_file_byname = split(data_file, data_file$name)
     
@@ -146,6 +147,7 @@ diff_length = function(data_file, test, params, b = baseline) {
                        paste("mean_length",b,sep = "."),"mean_length.alt")
     out = cbind(out, desc)
     rownames(out) = names(data_file_byname)
+
     return(out)
 }
 
