@@ -77,7 +77,7 @@ diff_length_single = function(data_file_sub, test, params, logscale = TRUE, cont
     } else {
         est_head = "meandiff"
     }
-    tryCatch({  
+    tryCatch({   
         if (test == "t") {
             res = lm(length~condition, data = data_file_sub)
             out = summary(res)$coefficients[2,c(1,4)]
@@ -130,7 +130,8 @@ calc_descriptives = function(d) {
     return(out)
 }
 
-diff_length = function(data_file, test, params) {
+
+diff_length = function(data_file, test, params, b = baseline) {
     data_file_byname = split(data_file, data_file$name)
     
     # Loops over all subsets split by name
@@ -142,8 +143,11 @@ diff_length = function(data_file, test, params) {
     desc = lapply(names(data_file_byname),
                   function(d) {calc_descriptives(data_file_byname[[d]])})
     desc = data.frame(do.call(rbind, desc))
-    colnames(desc) = c("n.1","n.2","mean_length.1","mean_length.2")
+    colnames(desc) = c(paste("n",b,sep = "."),"n.alt",
+                       paste("mean_length",b,sep = "."),"mean_length.alt")
     out = cbind(out, desc)
+    rownames(out) = names(data_file_byname)
+
     return(out)
 }
 
