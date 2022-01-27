@@ -183,7 +183,11 @@ sink(ww, type = "message")
 
 diff_length_single = function(data_file_sub, test, params, logscale = TRUE, contig_name) {
     out = c(NA,NA)
-    model = paste(c("length~condition",params),sep="+")
+    if (is.null(params)) {
+        model = "length~condition"
+    } else {
+        model = paste(c("length~condition",params),sep="+")
+    }
     if (logscale) {
         data_file_sub$length = log2(data_file_sub$length)
         est_head = "log2FC"
@@ -192,10 +196,11 @@ diff_length_single = function(data_file_sub, test, params, logscale = TRUE, cont
     }
     tryCatch({   
         if (test == "t") {
-            res = lm(length~condition, data = data_file_sub)
+            res = lm(as.formula(model), data = data_file_sub)
             out = summary(res)$coefficients[2,c(1,4)]
         } else if (test == "m") {
-            res = lme4::lmer(length~condition + (1 | lib_id), data = data_file_sub)
+            model = paste(model, "(1 | lib_id)", sep = "+")
+            res = lme4::lmer(as.formula(model), data = data_file_sub)
             out = summary(res)$coefficients[2,c(1,3)]
             out[2] = 2*pt(abs(out[2]), df=nrow(data_file_sub)-2,lower.tail = FALSE)
         } else if (test == "w") {
