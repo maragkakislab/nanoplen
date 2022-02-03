@@ -1,4 +1,19 @@
 # nanoplen: Differential length analysis
+Definition: Nanoplen tests for differences in transcript length between diffrerent conditions in nanopore sequencing data. 
+
+# Nanoplen normalization:
+We assume that discrepancies in length for replicates is far more likely to be shortening in longer transcripts, while shorter transcripts are unaffected. To normalize two replcates to each other, we first use a simple linear regression model on the average length of each transcript in the two replicates. We use the slope of determine which replicate has the larger average transcript lengths. We then increase the length of all transcripts above the intersection between the modeled regression line and the Y=X of the sample with smaller average lengths to match the Y=X line. For normalization with more than two replicates, all replicates are adjust to match the replicate with the longest large transcripts.
+
+# Nanoplen differential length model:
+Nanoplen has the option to use three models: t-test, linear mixed model, or Wilcoxon test. Regardless of test used, the output is the pertaining statistic and p-value for each contig in the data. T-test and linear mixed model can include extra covariates but Wilcoxon cannot.
+t-test:
+Nanoplen models a simple linear regression for the effect of the condition on average length. If no extra covariates are supplied, this is mathematically equivalent to a t-test for difference in means.
+Linear Mixed Model:
+The linear mixed model uses the library ID as a random effect to control for library-specific batch effects. Otherwise, this uses the same model as in the t-test.
+Wilcoxon:
+The Wilcoxon test is the nonparametric equivalent of the t-test for difference in means. This method is restricted to a two-level condition variable and no extra covariates.
+
+we used LMM over t-test because it can account for sample-specific batch effects and is just more powerful in general. LMM was also used over wilcoxon for similar reasons, but also because wilcoxon cannot account for extra parameters, but we just put it there in case the length distribution is all over the place for some reason
 
 ## Input
 
