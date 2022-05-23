@@ -181,7 +181,7 @@ wfile = ifelse(ofile == "stdout", "warnings.txt", sprintf("%s_warnings.txt", ofi
 ww <- file(wfile, open = "wt")
 sink(ww, type = "message")
 
-diff_length_single = function(data_file_sub, test, params, logscale = TRUE, contig_name) {
+diff_length_single = function(data_file_sub, test, params = NULL, logscale = TRUE, contig_name = "") {
     out = c(NA,NA)
     if (is.null(params)) {
         model = "length~condition"
