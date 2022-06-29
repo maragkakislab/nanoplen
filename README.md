@@ -14,30 +14,18 @@ we used LMM over t-test because it can account for sample-specific batch effects
 
 
 # Nanoplen normalization:
-We assume that discrepancies in length for replicates is far more likely to be shortening in longer transcripts, while shorter transcripts are unaffected. To normalize two replcates to each other, we first use a simple linear regression model on the average length of each transcript in the two replicates. We use the slope of determine which replicate has the larger average transcript lengths. We then increase the length of all transcripts above the intersection between the modeled regression line and the Y=X of the sample with smaller average lengths to match the Y=X line. For normalization with more than two replicates, all replicates are adjust to match the replicate with the longest large transcripts.
+We assume that discrepancies in length in replicates is far more likely to be shortening of longer transcripts, while shorter transcripts are unaffected. To normalize two replcates to each other, we first use a simple linear regression model on the average length of each transcript in the two replicates. We use the slope to determine which replicate has larger average transcript lengths. We then increase the length of all transcripts above the intersection between the modeled regression line and the Y=X of the sample with smaller average lengths to match the Y=X line. For normalization with more than two replicates, all replicates are adjust to match the replicate with the longest transcripts.
+
+To use this option, the metadata must require a `norm_group` column, where replicates have identical values.
 
 ## Input
 
-Nanoplen accepts two input files. The first file is TAB separated and contains the metadata that describe the samples
-and the conditions in the experiment, similar to DESeq2. The second file is also TAB separated and contains the actual
-length data and consists of 3 columns, the sample name, the identifier and the length. The identifier is used to
-aggregate lengths together. It is usually a gene or transcript id but it can be anything else that the user wishes.
+Nanoplen accepts two input files. The first file is TAB separated and contains the length data and consists of 3 columns, the sample name, the identifier and the length. The second file is TAB separated and contains the metadata that describe the samples and the conditions in the experiment. The identifier is used to aggregate lengths together, usually a gene or transcript id.
 
-### Example input
+### Example inputs
 
-Metadata file
+Length data file called lengths.txt
 
-```
-lib_id  condition
-library_1 control
-library_2 control
-library_3 treated
-library_4 treated
-library_3 treated
-library_5 treated
-```
-
-Length data file
 ```
 lib_id  id  len
 library_1 gene_1  1500
@@ -59,6 +47,24 @@ library_5 gene_1  1300
 library_5 gene_1  1200
 library_5 gene_2  200
 library_5 gene_2  800
+```
+
+Metadata file, called metadata.txt
+
+```
+lib_id  condition
+library_1 control
+library_2 control
+library_3 treat
+library_4 treat
+library_5 treat
+library_6 treat
+```
+
+
+### Example command
+```
+diff_length.R -d lengths.txt -m metadata.txt -t w --logscale -o path/to/out
 ```
 
 ### Example output
