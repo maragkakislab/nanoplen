@@ -22,10 +22,19 @@ To use this option, the metadata must require a `norm_group` column, where repli
 
 Nanoplen accepts two input files. The first file is TAB separated and contains the length data and consists of 3 columns, the sample name, the identifier and the length. The second file is TAB separated and contains the metadata that describe the samples and the conditions in the experiment. The identifier is used to aggregate lengths together, usually a gene or transcript id.
 
-### Example inputs
 
+FIXME
+# Tutorial
+
+
+###1. 
+[Optional conda environment from yaml]
+
+[Alternatively Install package in R]
+
+###2. Example inputs
 Length data file called lengths.txt
-
+FIXME: UPDATE WITH NEW EXAMPLE DATA
 ```
 lib_id  id  len
 library_1 gene_1  1500
@@ -61,15 +70,8 @@ library_5 treat
 library_6 treat
 ```
 
+###3. Example commands
 
-### Example command
-```
-diff_length.R -d lengths.txt -m metadata.txt -t w --logscale -o path/to/out
-```
+###4. Example outputs
 
-### Example output
-```
-id  baseMean  log2fc  pvalue
-gene_1  1500  -0.5  0.0001
-gene_2  500 -0.1  0.1
-```
+###5. Example plots
