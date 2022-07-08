@@ -84,7 +84,7 @@ calc_descriptives = function(df) {
     return(out)
 }
 
-diff_length = function(data_file, test, params, b = baseline) {
+diff_length = function(data_file, test, params, logscale, b = baseline) {
     data_file_byname = split(data_file, data_file$name)
     
     # Loops over all subsets split by name
