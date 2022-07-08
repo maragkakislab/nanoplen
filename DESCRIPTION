@@ -1,0 +1,10 @@
+Package: nanoplen
+Type: Package
+Title: NanopLen - Differential Length Analysis for Nanopore Data
+Version: 0.0.1
+Date: 2022-07-08
+Authors@R: c(
+	person("Showkat","Dar",role=c("aut","cph")))
+Description: Nanopore length comparison..
+Collate:
+	'diff_length_funcs.R'
