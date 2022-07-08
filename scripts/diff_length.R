@@ -9,7 +9,7 @@ option_list <- list(
                 help="Path to metadata file, columns: library id, condition, [additional columns]"),
     make_option(c("-t","--test"), default = "t",
                 help="Statistical test to use (t:t-test, m:linear mixed model, w:wilcoxon) [default %default]"),
-    make_option(c("-b","--baseline"), default = "Control",
+    make_option(c("-b","--baseline"), default = NULL,
                 help="String to specify baseline category [default %default]"),
     make_option(c("-l","--logscale"), action = "store_true",  default=FALSE,
                 help="Convert length to log2 scale (TRUE/FALSE) [default %default]"),
