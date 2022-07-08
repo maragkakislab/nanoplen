@@ -1,21 +1,22 @@
-
 #' Run NanopLen differential length on a file of lengths per transcript
 #'
 #' NanopLen tests for significant differences in lengths, e.g. transcript length
 #' or Poly(A) tail length, between two categories. 
 #' 
-#' Expected inputs:
-#' Data file: A file of lengths with these columns in order: library id, gene/transcript id, length
-#' Metadata: Metadata with these columns in order: library id, condition, and any optional additional columns
+#' @section Expected inputs:
+#' \item Data file: A file of lengths with these columns in order: library id, gene/transcript id, length
+#' \item Metadata: Metadata with these columns in order: library id, condition, and any optional additional columns
 #'
-#' Expected output:
+#' @section Expected output:
 #' A results file with the following columns:
-#' id: corresponds to gene/transcript as given in data file
-#' meandiff or log2fc: the difference or log2 fold change, depending on if the logscale option 
+#' \item id: corresponds to gene/transcript as given in data file
+#' \item meandiff or log2fc: the difference or log2 fold change, depending on if the logscale option 
 #' was selected.
-#' pvalue: p-values for significance of differential length test
-#' qvalue: Adjusted p-values using the Bonferroni-Hochberg method
+#' \item pvalue: p-values for significance of differential length test
+#' \item qvalue: Adjusted p-values using the Bonferroni-Hochberg method
 #' 
+#'
+
 diff_length_single = function(data_file_sub, test, params = NULL, logscale = TRUE, contig_name = "") {
     out = c(NA,NA)
     if (is.null(params)) {

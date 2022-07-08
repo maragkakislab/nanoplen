@@ -1,33 +1,5 @@
 #!/usr/bin/env Rscript
 
-#' Run NanopLen differential length on a file of lengths per transcript
-#'
-#' NanopLen tests for significant differences in lengths, e.g. transcript length
-#' or Poly(A) tail length, between two categories. 
-#' 
-#' Expected inputs:
-#' Data file: A file of lengths with these columns in order: library id, gene/transcript id, length
-#' Metadata: Metadata with these columns in order: library id, condition, and any optional additional columns
-#'
-#' Expected output:
-#' A results file with the following columns:
-#' id: corresponds to gene/transcript as given in data file
-#' meandiff or log2fc: the difference or log2 fold change, depending on if the logscale option 
-#' was selected.
-#' pvalue: p-values for significance of differential length test
-#' qvalue: Adjusted p-values using the Bonferroni-Hochberg method
-#' 
-#' Normalization:
-#' To use this method, the metadata MUST have a 'norm_group' column where the libraries that are replicates
-#' of each other have the same value.
-#' 
-#' For more details, read the documentation on the Github
-#' 
-#' Tests:
-#' t-test: Least recommended, only if you want fast exploratory results
-#' Linear Mixed Model: Recommended. Most robust option.
-#' Wilcoxon: Recommended if you think the spread of lengths has too many outliers.
-
 suppressPackageStartupMessages(library(optparse))
 
 option_list <- list(
