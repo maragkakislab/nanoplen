@@ -6,9 +6,11 @@ import pysam
 
 """
 Reads a SAM/BAM file and prints the reference sequence name and the read length
-for each mapped read. If a header exists in the SAM/BAM then the references
-without reads will have NaN for the length. An additional column will be
-printed at the beginning if requested with --opt-col-name.
+for each mapped read. If a header exists, and user wants all ids in the SAM/BAM
+they can also be printed but will have NaN for the length, with the argument
+'--no-zeros' . An additional column will be printed at the beginning if
+requested with '--opt-col-name' adn its values with '--opt-col-val' e.g. for
+sample  or library name that will be required in subsequenct steps.
 """
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -17,15 +19,15 @@ parser.add_argument("-i", "--ifile",
 parser.add_argument("-f", "--sam", action='store_true',
                     help="Use this Option if input file is in SAM format")
 parser.add_argument("-r", "--ref-col-name", default="reference",
-                    help="Name for column for reference ids, default:reference")
+                    help="Name for column for reference ids, (default: %(default)s)")
 parser.add_argument("-c", "--len-col-name", default="length",
-                    help="Name for column with the read length values, e.g length")
+                    help="Name for column with the read lengths, (default: %(default)s)")
 parser.add_argument("-n", "--opt-col-name", nargs="+",
                     help="Name of an optional column e.g. sample_name")
 parser.add_argument("-v", "--opt-col-val", nargs="+",
                     help="Value for the optional column; same for all rows")
 parser.add_argument("-s", "--col_delimiter", default="\t",
-                    help="Column delimiter of output-file, default : tab(\t)")
+                    help="Column delimiter of output-file, default : <TAB>")
 parser.add_argument("-x", "--no-zeros", action='store_true',
                     help="Skip references with 0 reads")
 args = parser.parse_args()
