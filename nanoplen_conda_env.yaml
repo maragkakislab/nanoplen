@@ -1,0 +1,14 @@
+name: nanoplen_input_format_env
+channels:
+  - conda   #4.3.16
+  - r   #3.6.0
+dependencies:
+  - python=3.6.5
+  - numpy=1.9.*
+  - pandas=1.0.3
+  - pysam=0.15.4
+  - matplotlib=3.3.2
+  - seaborn=0.11.0
+  - pip
+  - pip:
+    #- package-name
