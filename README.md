@@ -12,20 +12,13 @@ The Wilcoxon test is the nonparametric equivalent of the t-test for difference i
 
 we used LMM over t-test because it can account for sample-specific batch effects and is just more powerful in general. LMM was also used over wilcoxon for similar reasons, but also because wilcoxon cannot account for extra parameters, but we just put it there in case the length distribution is all over the place for some reason
 
-
-# Nanoplen normalization:
-We assume that discrepancies in length in replicates is far more likely to be shortening of longer transcripts, while shorter transcripts are unaffected. To normalize two replicates to each other, we first use a simple linear regression model on the average length of each transcript in the two replicates. We use the slope to determine which replicate has larger average transcript lengths. We then increase the length of all transcripts above the intersection between the modeled regression line and the Y=X of the sample with smaller average lengths to match the Y=X line. For normalization with more than two replicates, all replicates are adjust to match the replicate with the longest transcripts.
-
-To use this option, the metadata must require a `norm_group` column, where replicates have identical values.
-
 ## Input
 
 Nanoplen accepts two input files. The first file is TAB separated and contains the length data and consists of 3 columns, the sample name, the identifier and the length. The second file is TAB separated and contains the metadata that describe the samples and the conditions in the experiment. The identifier is used to aggregate lengths together, usually a gene or transcript id.
 
 
-FIXME
 # Tutorial
-We here provide the step-by-step example of complete demo for nanoplen based analysis and plots. The example input and output files can be found in the 'examples' folder associated with this repository. We have provided
+Here we provide the step-by-step example of complete demo for nanoplen based analysis and plots. The example input and output files can be found in the 'examples' folder associated with this repository. We have provided
 smaller size of files for demonstrations e.g. bam files. However, if you are able to generate the results from the given example data you should be able to analyze your own long read sequencing data.
 
 # Setting up the computational Environment and software requirements.
@@ -46,12 +39,15 @@ We have tested the scripts in the bash (x86_64-redhat-linux-gnu):
 
 [Optional conda environment from yaml]
 
-[Alternatively Install package in R]
+After installing R, you can install the R package with
+```
+devtools::install_github("maragkakislab/nanoplen")
+```
 
 #1.STEP-1: Read-length of individual transcripts and metadata files:
-Generating the annotated reads (Transcripts) with respective length per sample from BAM/SAM files, which are extracted after base calling, mapping and alignment of direct RNA seq long read sequencing (other long read sequencing data will also work until it is in the required format as shown examples folder "nanoplen_input_format.tab").
+Generate the annotated reads (Transcripts) with respective length per sample from BAM/SAM files, which are extracted after base calling, mapping and alignment of direct RNA seq long read sequencing (other long read sequencing data will also work until it is in the required format as shown examples folder "nanoplen_input_format.tab").
 
-Starting with BAM/SAM files, we have used three Control and three Treatment demo files in "demo_bamfiles" folder in examples namely:
+Starting with BAM/SAM files, we have three Control and three Treatment demo files in "demo_bamfiles" folder in examples:
 
 ```
  Control_1_demo.bam
@@ -138,7 +134,7 @@ Command:
 
 With proper input and parameters the file will generate the output as shown below. It contains eight columns that include:
 1) 'name' (the name of the transcript),
-2) 'log2FC' (length difference Fold-Change in log2 scale),
+2) 'log2FC' (log2 fold change of length between the treatment and control groups),
 3 & 4) 'pvalue' and 'qvalue' for significance value or score,
 5 & 6)  'n.control' and 'n.alt' represent the number of reads or transcripts each read have in corresponding samples,
 7 & 8) 'mean_length.control' and 'mean_length.alt' are the average read length of the transcript in the respective samples.
