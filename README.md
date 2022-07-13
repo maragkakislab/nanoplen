@@ -182,10 +182,5 @@ Likewise, if we use the data length in log2 scale we, can generate the plots in 
   title="Demo Plots (log2)"
   style="display: inline-block; margin: 0 auto; max-width: 300px" >
 
-<img
-  src="examples/demo_plots/scatter_densityplot_log2_demo.pdf"
-  alt="scatter_densityplot_log2_demo"
-  title="Scatter Density plot (log2) demo"
-  style="display: inline-block; margin: 0 auto; max-width: 300px" >
 
 From the Proportion plot we can analyze the difference in the mean lengths between the two samples. Also, from the scatter-density plot we can analyze the spread of the mean length per transcript.
