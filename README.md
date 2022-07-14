@@ -37,9 +37,8 @@ We have tested the scripts in the bash (x86_64-redhat-linux-gnu):
 - matplotlib=3.3.2
 - seaborn=0.11.0
 
-[Optional conda environment from yaml]
 
-After installing R, you can install the R package with
+After installing R, install the nanoplen R package:
 ```
 devtools::install_github("maragkakislab/nanoplen")
 ```
@@ -96,7 +95,8 @@ Command:
 
 ```
 awk 'FNR>1 || NR==1' \
-	 file-readids_list.tab \
+	file-readids_list.tab \
+	examples/demo_bam_to_transcriptlist/Control_1_demo-readids_list.tab \
 	examples/demo_bam_to_transcriptlist/Control_2_demo-readids_list.tab \
 	examples/demo_bam_to_transcriptlist/Control_3_demo-readids_list.tab \
 	examples/demo_bam_to_transcriptlist/Treatment_1_demo-readids_list.tab \
