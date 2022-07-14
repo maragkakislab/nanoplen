@@ -45,7 +45,7 @@ diff_length_single = function(data_file_sub, test, params = NULL, logscale = TRU
         ,
         error = {function(e) {warning(
             #FIXME: Was supposed to also show which gene/transcript but cannot extract with current algorithm
-            sprintf("Error in %s: NAs given", contig_name))
+            sprintf("Error in %s: NAs given\n", contig_name))
             has_warning <<- TRUE 
         }}
     )

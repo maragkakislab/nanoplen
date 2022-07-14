@@ -76,8 +76,8 @@ nanoplen <- function(data_file,
     if (test == "w") {
         levels = levels(metadata$condition)
         logscale = FALSE
-        if (length(levels)>2) {warning("More than two levels detected, Wilcox is only for two-level comparison!")}
-        if (!is.null(params)) {warning("Extra parameters not supported with Wilcoxon test!")}
+        if (length(levels)>2) {warning("More than two levels detected, Wilcox is only for two-level comparison!\n")}
+        if (!is.null(params)) {warning("Extra parameters not supported with Wilcoxon test!\n")}
     }
     
     # Relevel data_file$condition to use baseline string
