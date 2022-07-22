@@ -1,0 +1,18 @@
+Package: nanoplen
+Type: Package
+Title: NanopLen - Differential Length Analysis for Nanopore Data
+Version: 0.9.0
+Date: 2022-07-08
+Authors@R: c(
+	person("Showkat","Dar",role=c("aut","cph"),email = "showkat.dar@nih.gov"),
+	person(c("Christopher","T."),"Lee",role=c("aut"),email = "leect@nih,gov"),
+	person("Manolis","Maragkakis",role=c("ths"),email = "emmanouil.maragkakis@nih.gov")
+	)
+Description: NanopLen performs differential length analysis on Nanopore long-read sequencing 
+	data. 
+Imports: optparse, lme4, stats, dplyr
+Suggests: testthat
+Maintainer: Showkat Dar <showkat.dar@nih.gov>
+Collate:
+	'diff_length_funcs.R'
+	'nanoplen.R'
