@@ -3,19 +3,22 @@ Definition: Nanoplen tests for differences in transcript length between differen
 
 # Nanoplen differential length model:
 Nanoplen has the option to use three models: t-test, linear mixed model, or Wilcoxon test. Regardless of test used, the output is the pertaining statistic and p-value for each contig in the data. T-test and linear mixed model can include extra covariates but Wilcoxon cannot.
-t-test:
+- t-test:
 Nanoplen models a simple linear regression for the effect of the condition on average length. If no extra covariates are supplied, this is mathematically equivalent to a t-test for difference in means.
-Linear Mixed Model:
+- Linear Mixed Model:
 The linear mixed model uses the library ID as a random effect to control for library-specific batch effects. Otherwise, this uses the same model as in the t-test.
-Wilcoxon:
+- Wilcoxon:
 The Wilcoxon test is the nonparametric equivalent of the t-test for difference in means. This method is restricted to a two-level condition variable and no extra covariates.
 
 we used LMM over t-test because it can account for sample-specific batch effects and is just more powerful in general. LMM was also used over wilcoxon for similar reasons, but also because wilcoxon cannot account for extra parameters, but we just put it there in case the length distribution is all over the place for some reason
 
 ## Input
 
-Nanoplen accepts two input files. The first file is TAB separated and contains the length data and consists of 3 columns, the sample name, the identifier and the length. The second file is TAB separated and contains the metadata that describe the samples and the conditions in the experiment. The identifier is used to aggregate lengths together, usually a gene or transcript id.
+Nanoplen accepts two input files. The first file is TAB separated and contains the length data and consists of 3 columns: the sample name, the identifier (e.g. transcript name, used to aggregate lengths), and the length. The second file is TAB separated and contains the metadata that describe the samples and the conditions in the experiment. 
 
+## Output
+
+Nanoplen will output a delimited file with information for each identifier per row with information on the change in length, its significance, and other descriptive statitsics: number of reads and mean length per condition.
 
 # Tutorial
 Here we provide the step-by-step example of complete demo for nanoplen based analysis and plots. The example input and output files can be found in the 'examples' folder associated with this repository. We have provided
