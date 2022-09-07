@@ -17,5 +17,7 @@ Depends: R (>= 3.6.0)
 LazyLoad: yes
 Maintainer: Showkat Dar <showkat.dar@nih.gov>
 Collate:
-	'diff_length_funcs.R'
-	'nanoplen.R'
+    'adjust_long_norm.R'
+    'diff_length_funcs.R'
+    'nanoplen.R'
+RoxygenNote: 7.1.1
