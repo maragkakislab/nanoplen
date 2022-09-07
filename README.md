@@ -127,12 +127,12 @@ Command:
 
 ```
 ./scripts/diff_length.R \
-	--data_path nanoplen_input_format.tab \
-	--metadata_path metadata_format.tab \
+	--data_path examples/nanoplen_input_format.tab \
+	--metadata_path examples/metadata_format.tab \
 	--baseline "control" \
 	--test m \
 	--logscale TRUE \
-	--ofile nanoplen_output_format_LinearMixedModel.tab
+	--ofile examples/nanoplen_output_format_LinearMixedModel.tab
 ```
 
 With proper input and parameters the file will generate the output as shown below. It contains eight columns that include:
