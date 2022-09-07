@@ -4,7 +4,7 @@ Title: NanopLen - Differential Length Analysis for Nanopore Data
 Version: 0.9.0
 Date: 2022-09-06
 Authors@R: c(
-	person("Showkat","Dar",role=c("aut","cph"),email = "showkat.dar@nih.gov"),
+	person("Showkat","Dar",role=c("aut","cph", "cre"),email = "showkat.dar@nih.gov"),
 	person(c("Christopher","T."),"Lee",role=c("aut"),email = "leect@nih,gov"),
 	person("Manolis","Maragkakis",role=c("ths"),email = "emmanouil.maragkakis@nih.gov")
 	)
