@@ -13,6 +13,8 @@ option_list <- list(
                 help="Path to metadata file, columns: library id, condition, [additional columns]"),
     make_option(c("-t","--test"), default = "t",
                 help="Statistical test to use (t:t-test, m:linear mixed model, w:wilcoxon) [default %default]"),
+    make_option(c("-c","--condition"), default = NULL,
+                help="Condition variable to test on [default uses second metadata column]"),
     make_option(c("-b","--baseline"), default = "Control",
                 help="String to specify baseline category [default %default]"),
     make_option(c("-l","--logscale"), action = "store_true",  default=FALSE,
@@ -26,7 +28,7 @@ option_list <- list(
 )
 opt <- parse_args(OptionParser(option_list = option_list))
 
-vars = c("data_path", "metadata_path","test","baseline","logscale","params", "norm", "ofile")
+vars = sapply(1:(length(option_list)), function(i) {substr(option_list[[i]]@long_flag,3,1000)})
 for (i in 1:length(vars)) {
     assign(vars[i],opt[[vars[i]]])
 }
@@ -46,6 +48,17 @@ has_warning <<- FALSE
 wfile = ifelse(ofile == "stdout", "warnings.txt", sprintf("%s_warnings.txt", ofile))
 ww <- file(wfile, open = "wt")
 sink(ww, type = "message")
+
+if (!is.null(condition)) {
+    if (!(condition %in% colnames(metadata))) {
+        stop("Condition variable not in metadata columns!")
+    } else {
+        #Puts condition variable as second 
+        #This assumes the sample variable is always first in the metadata
+        ind = which(condition==colnames(metadata))
+        metadata = metadata[,c(1,ind,(2:ncol(metadata))[-(ind-1)])]
+    }
+}
 
 outres = nanoplen(data_file,
                   metadata,
