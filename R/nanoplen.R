@@ -81,7 +81,7 @@ nanoplen <- function(data_file,
     }
     
     # Relevel data_file$condition to use baseline string
-    data_file = within(data_file, condition <- relevel(condition, ref = baseline))
+    data_file = within(data_file, condition <- relevel(factor(condition), ref = baseline))
     
     outres = diff_length(data_file, test, params, logscale, baseline)
     outres = cbind(rownames(outres),outres)
