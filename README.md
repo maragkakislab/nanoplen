@@ -1,4 +1,4 @@
-# nanoplen: Differential length analysis
+# NanopLen: Differential length analysis
 Definition: Nanoplen tests for differences in transcript length between different conditions in nanopore sequencing data.
 
 # Nanoplen differential length model:
