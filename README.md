@@ -6,7 +6,7 @@ NanopLen has the option to use three models: t-test, linear mixed model, or Wilc
 - t-test:
 NanopLen models a simple linear regression for the effect of the condition on average length. If no extra covariates are supplied, this is mathematically equivalent to a t-test for difference in means.
 - Linear Mixed Model:
-The linear mixed model uses the library ID as a random effect to control for library-specific batch effects. Otherwise, this uses the same model as in the t-test.
+The linear mixed model (LLM) uses the library ID as a random effect to control for library-specific batch effects. Otherwise, this uses the same model as in the t-test.
 - Wilcoxon:
 The Wilcoxon test is the nonparametric equivalent of the t-test for difference in means. This method is restricted to a two-level condition variable and no extra covariates.
 
@@ -17,18 +17,12 @@ We use a LMM over t-test because it can account for sample-specific batch effect
 ## Setting up the computational Environment and software requirements.
 Following setup will be required to run the NanopLen as well as supporting scripts.
 We have tested the scripts in the bash (x86_64-redhat-linux-gnu):
-
-- GNU bash 4.2.46 ()
-- GNU AWK 4.0.2
-
-- conda 4.3.16
-- r 3.6.0
-- python=3.6.5
-- numpy=1.9.*
-- pandas=1.0.3
-- pysam=0.15.4
-- matplotlib=3.3.2
-- seaborn=0.11.0
+User can setup the conda envirnment for better utilisation of the package ans associated scripts.
+```
+conda env create -f nanoplen_conda_env.yaml
+```
+After the conda envirnment is set, use the below command to install the nanoplen package.
+We suggest you clone this repostory into working folder to run test data and try the commands as well as utilise the acessory scripsts given here to process and create plots form demo data as described below.
 
 ## Install the NanopLen R package:
 ```
@@ -39,7 +33,7 @@ devtools::install_github("maragkakislab/NanopLen")
 
 ## Input
 
-NanopLen accepts two input files. The first file is TAB separated and contains the length data and consists of 3 columns: the sample name, the identifier (e.g. transcript name, used to aggregate lengths), and the length. The second file is TAB separated and contains the metadata that describe the samples and the conditions in the experiment. 
+NanopLen accepts two input files. The first file is TAB separated file that contains the length information. It consists of 3 columns: the sample name, the identifier (e.g. transcript name, used to aggregate lengths), and the length (trasncript length or polyA tail length). This file contaians all the read-lengths that are presenat in the sequencing file. The second file is the metadata file that describe the samples and the conditions in the experiment (information in TAB separated format). 
 
 ## Output
 
