@@ -17,12 +17,12 @@ We use a LMM over t-test because it can account for sample-specific batch effect
 ## Setting up the computational Environment and software requirements.
 Following setup will be required to run the NanopLen as well as supporting scripts.
 We have tested the scripts in the bash (x86_64-redhat-linux-gnu):
+We suggest you clone this repostory into working folder to run test data and try the commands as well as utilise the acessory scripsts given here to process and create plots form demo data as described below.
 User can setup the conda envirnment for better utilisation of the package ans associated scripts.
 ```
 conda env create -f nanoplen_conda_env.yaml
 ```
-After the conda envirnment is set, use the below command to install the nanoplen package.
-We suggest you clone this repostory into working folder to run test data and try the commands as well as utilise the acessory scripsts given here to process and create plots form demo data as described below.
+After the conda envirnment is set, use the below command to install the nanoplen package (inside R).
 
 ## Install the NanopLen R package:
 ```
