@@ -61,13 +61,13 @@ To generate the list of transcript ids with length profile, we use the helper sc
 Command:
 ```
 ./scripts/bam_to_readlength.py \
-    --ifile example/demo_bamfiles/Control_1_demo.bam \
+    --ifile examples/demo_bamfiles/Control_1_demo.bam \
     --ref-col-name transcript \
     --len-col-name read_length \
     --opt-col-name sample \
     --opt-col-val Control_1_demo \
     --no-zeros \
-    > example/demo_bam_to_transcriptlist/Control_1_demo_transcripts_list.tab
+    > examples/demo_bam_to_transcriptlist/Control_1_demo_transcripts_list.tab
 ```
 
 The output is as shown below, three columns with sample name (e.g. Control_1_demo as sample name), transcript IDs (e.g. ENST00000338700 etc) and respective read lengths (e.g. 5489 nucleotide long in first row).
