@@ -148,7 +148,7 @@ ENST00000222345	-1.21934507323735	3.14828699778755e-05	0.000755588879469013	39	3
 ENST00000257468	-1.21184838201074	0.0123434414903834	0.0164579219871779	12	14	1301.25	559.142857142857
 ENST00000258281	-1.0075796672931	0.0142801318054535	0.0180380612279412	14	15	2556.85714285714	1493.8
 ```
-Additionally, a bening warning file (`NanopLen...warnings.txt`) that user should ignore, is generated with the warning etc. associated with the execution of the above programme.
+Additionally, if any specific transcripts encountered an error during the analysis, e.g. from too few samples or non-convergence, a warning file (`NanopLen...warnings.txt`) will be generated containing these errors.
 
 ### STEP 3. Post execution plots:
 After successful execution of the NanopLen, and generating the results file we can view the results by plots using the `NanopLen_two_col_plots.py` script from examples folder. We have used `plots_input_demo.tab` data file to generate the plots (1. Proportion Plot & 2. Scatter-Density plot).
