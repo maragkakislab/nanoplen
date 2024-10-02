@@ -162,7 +162,6 @@ After successful execution of the NanopLen, and generating the results file we c
 	--ofigure demo_plots.pdf
 ```
 Note: In case of log scaled mean lengths file make sure to provide proper column names as well as 'lowerlimit' and 'upperlimits' of X and Y-axis.
-Note 2: Use R > 3.6 for installing the pakcage.
 
 
 
@@ -174,3 +173,6 @@ Likewise, if we use the data length in log2 scale we, can generate the plots in 
 <img src="examples/demo_plots/demo_plots_log2.png" alt="Demo Plots" title="Demo Plots" width="400" height="800"/>
 
 From the Proportion plot we can analyze the difference in the mean lengths between the two samples. Also, from the scatter-density plot we can analyze the spread of the mean length per transcript.
+
+
+Note: Use R > 3.6 for installing the pakcage. 
