@@ -161,7 +161,8 @@ After successful execution of the NanopLen, and generating the results file we c
 	--upperlimit 5000 \
 	--ofigure demo_plots.pdf
 ```
-Note: In case of log scaled lmean lengths file make sure to provide proper column names as well as 'lowerlimit' and 'upperlimits' of X and Y-axis.
+Note: In case of log scaled mean lengths file make sure to provide proper column names as well as 'lowerlimit' and 'upperlimits' of X and Y-axis.
+Note 2: Use R > 3.6 for installing the pakcage.
 
 
 
