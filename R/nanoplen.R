@@ -70,9 +70,8 @@ nanoplen <- function(data_file,
         data_file = run_adjust_norm(data_file, metadata)
     }
     
-    covariates = strsplit(params, "\\+")[[1]]
     # Add condition column from metadata
-    data_file = merge(data_file, metadata[c("lib_id","condition",covariates)], by="lib_id")
+    data_file = merge(data_file, metadata[c("lib_id","condition",vars)], by="lib_id")
     
     if (test == "w") {
         levels = levels(metadata$condition)
