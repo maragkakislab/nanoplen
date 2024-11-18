@@ -57,6 +57,8 @@ nanoplen <- function(data_file,
         if (!all(vars_in_meta)) {
             stop(sprintf("Model parameters not in metadata: %s",paste(vars[!vars_in_meta], collapse = " ")))
         }
+    } else {
+      vars = NULL
     }
     
     # Remove rows with reported length 0. They should not be there anyway.
