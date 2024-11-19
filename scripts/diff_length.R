@@ -45,8 +45,8 @@ data_file <- read.delim(data_path, header = TRUE, sep = delim)
 metadata <- read.delim(metadata_path, header = TRUE, sep = delim)
 
 if (!is.null(filter_file)) {
-  filter_file = read.table(filter_file, header = T, sep = "\t", stringsAsFactors = F)
-  data_file = data_file[data_file[,1] %in% filter_file[,1],]
+  filter_file = read.table(filter_file, header = F, sep = "\t", stringsAsFactors = F)
+  data_file = data_file[data_file[,2] %in% filter_file[,1],]
 }
 
 # Global variable. Low priority

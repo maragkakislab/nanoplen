@@ -96,7 +96,7 @@ diff_length = function(data_file, test, params, logscale, b = baseline) {
     desc = lapply(rownames(out),
                   function(d) {calc_descriptives(data_file_byname[[d]])})
     desc = data.frame(do.call(rbind, desc))
-    if (!is.null(baseline)) {
+    if (length(data_file$condition) <= 2) {
       colnames(desc) = c(paste("n",b,sep = "."),"n.alt",
                          paste("mean_length",b,sep = "."),"mean_length.alt")
     } else {
