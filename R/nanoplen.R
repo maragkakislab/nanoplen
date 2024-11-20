@@ -57,6 +57,8 @@ nanoplen <- function(data_file,
         if (!all(vars_in_meta)) {
             stop(sprintf("Model parameters not in metadata: %s",paste(vars[!vars_in_meta], collapse = " ")))
         }
+    } else {
+      vars = NULL
     }
     
     # Remove rows with reported length 0. They should not be there anyway.
@@ -71,7 +73,7 @@ nanoplen <- function(data_file,
     }
     
     # Add condition column from metadata
-    data_file = merge(data_file, metadata, by="lib_id")[,1:4]
+    data_file = merge(data_file, metadata[c("lib_id","condition",vars)], by="lib_id")
     
     if (test == "w") {
         levels = levels(metadata$condition)
@@ -81,7 +83,9 @@ nanoplen <- function(data_file,
     }
     
     # Relevel data_file$condition to use baseline string
-    data_file = within(data_file, condition <- relevel(factor(condition), ref = baseline))
+    if (!is.null(baseline)) {
+      data_file = within(data_file, condition <- relevel(factor(condition), ref = baseline))
+    }
     
     outres = diff_length(data_file, test, params, logscale, baseline)
     outres = cbind(rownames(outres),outres)
