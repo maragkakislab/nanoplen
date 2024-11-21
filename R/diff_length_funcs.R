@@ -71,12 +71,14 @@ diff_length_single = function(data_file_sub, test, params = NULL, logscale = TRU
     return(out)
 }
 
-calc_descriptives = function(df) {
-    out = c(NA,NA,NA,NA)
-
+calc_descriptives = function(df, p=2) {
+    out = rep(NA, 2*p)
+    
     tryCatch({
-        out = c(aggregate(df$length, list(df$condition), FUN = length)[,2],
-                aggregate(df$length, list(df$condition), FUN = mean)[,2])
+        if (length(table(df$condtion)) == p ) {
+          out = c(aggregate(df$length, list(df$condition), FUN = length)[,2],
+                  aggregate(df$length, list(df$condition), FUN = mean)[,2])
+        }
     }, error = function(e) { }
     )
     return(out)
@@ -93,8 +95,9 @@ diff_length = function(data_file, test, params, logscale, b = baseline) {
     rownames(out) = names(data_file_byname)
     out$qvalue = p.adjust(out$pvalue,method = "BH")
     out = out[!is.na(out$pvalue), ]
+    p = length(table(data_file$condition))
     desc = lapply(rownames(out),
-                  function(d) {calc_descriptives(data_file_byname[[d]])})
+                  function(d) {calc_descriptives(data_file_byname[[d]], p)})
     desc = data.frame(do.call(rbind, desc))
     if (length(data_file$condition) <= 2) {
       colnames(desc) = c(paste("n",b,sep = "."),"n.alt",
