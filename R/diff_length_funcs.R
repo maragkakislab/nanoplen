@@ -75,7 +75,7 @@ calc_descriptives = function(df, p=2) {
     out = rep(NA, 2*p)
     
     tryCatch({
-        if (length(table(df$condition)) == p ) {
+        if (all(table(df$condition)) > 0 ) {
           out = c(aggregate(df$length, list(df$condition), FUN = length)[,2],
                   aggregate(df$length, list(df$condition), FUN = mean)[,2])
         }
