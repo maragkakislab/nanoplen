@@ -2,8 +2,7 @@
 Definition: NanopLen tests for differences in transcript length between different conditions in nanopore sequencing data.
 
 # Citation
-Dar SA, Malla S, et al, *Full-length direct RNA sequencing uncovers stress-granule dependent RNA decay upon cellular stress*, eLife, 2024
-doi: https://doi.org/10.7554/eLife.96284.2
+Dar SA, Malla S, et al, *Full-length direct RNA sequencing uncovers stress-granule dependent RNA decay upon cellular stress*, eLife2024;13:RP96284 DOI: https://doi.org/10.7554/eLife.96284.3
 
 # NanopLen differential length model:
 NanopLen has the option to use three models: t-test, linear mixed model, or Wilcoxon test. Regardless of test used, the output is the pertaining statistic and p-value for each contig in the data. T-test and linear mixed model can include extra covariates but Wilcoxon cannot.
