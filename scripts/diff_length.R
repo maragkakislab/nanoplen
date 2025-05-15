@@ -82,8 +82,8 @@ if (ofile == "stdout") {
     write.table(outres, file = ofile, sep = delim, quote = F, row.names = FALSE, col.names = TRUE)
 }
 
-sink(type="message")
-close(ww)
-if (has_warning) {
-    message(sprintf("Some tests errored, logged in %s", wfile))
-}
+# sink(type="message")
+# close(ww)
+# if (has_warning) {
+#     message(sprintf("Some tests errored, logged in %s", wfile))
+# }
