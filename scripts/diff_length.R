@@ -49,11 +49,11 @@ if (!is.null(filter_file)) {
   data_file = data_file[data_file[,2] %in% filter_file[,1],]
 }
 
-# Global variable. Low priority
-has_warning <<- FALSE
-wfile = ifelse(ofile == "stdout", "warnings.txt", sprintf("%s_warnings.txt", ofile))
-ww <- file(wfile, open = "wt")
-sink(ww, type = "message")
+# # Global variable. Low priority
+# has_warning <<- FALSE
+# wfile = ifelse(ofile == "stdout", "warnings.txt", sprintf("%s_warnings.txt", ofile))
+# ww <- file(wfile, open = "wt")
+# sink(ww, type = "message")
 
 if (!is.null(condition)) {
     if (!(condition %in% colnames(metadata))) {
