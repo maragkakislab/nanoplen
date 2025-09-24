@@ -69,6 +69,7 @@ outres = nanoplen(data_file,
                   metadata,
                   opt$test,
                   opt$baseline,
+                  opt$min_filter,
                   opt$logscale,
                   opt$params,
                   opt$norm)
