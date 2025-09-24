@@ -34,8 +34,8 @@ opt <- parse_args(OptionParser(option_list = option_list))
 
 delim <- "\t"  #Because this script is directly after nanoplen, we can control the output
 
-if (!(test %in% c("t","w","m","s"))) {
-    stop(sprintf("Unsupported test: %s. Accepted options: t, m, w, s", test))
+if (!(opt$test %in% c("t","w","m","s"))) {
+    stop(sprintf("Unsupported test: %s. Accepted options: t, m, w, s", opt$test))
 }
 
 # Input length data file and metadata file
