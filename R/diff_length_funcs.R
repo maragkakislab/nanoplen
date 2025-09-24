@@ -21,6 +21,7 @@ diff_length_single = function(data_file_sub, test, params = NULL, logscale = TRU
             out = summary(res)$coefficients[2,c(1,3)]
             out[2] = 2*pt(abs(out[2]), df=nrow(data_file_sub)-2,lower.tail = FALSE)
         } else if (test == "w") {
+            data_file_sub$condition = as.factor(data_file_sub$condition)
             levels = levels(data_file_sub$condition)
             x = data_file_sub$length[data_file_sub$condition == levels[1]]
             # Supposed to only have two levels, but just in case
