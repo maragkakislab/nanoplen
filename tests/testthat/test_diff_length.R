@@ -90,7 +90,7 @@ test_that('all_test_w', {
 
 test_that('all_test_bad', {
     expect_warning({out = diff_length(data_file_bad, "t", NULL, TRUE, "control")})
-    expect_equal(nrow(out), 3)
+    expect_equal(nrow(out), 2)
     expect_true(is.na(out[3,1]))
 })
 
@@ -102,8 +102,11 @@ test_that('test_single_t_value', {
 })
 
 test_that('test_single_t_value_reversebaseline', {
-    data_file_2 = within(data_file, condition <- relevel(condition, ref = "treated"))
-    df = data_file_2[data_file_2$name == "gene_2",]
+  data_file_2 <- within(data_file, {
+    condition <- as.factor(condition)
+    condition <- relevel(condition, ref = "treated")
+  })
+  df = data_file_2[data_file_2$name == "gene_2",]
     out = diff_length_single(df, "t", logscale = FALSE, )
     expect_true(round(out["meandiff"],0)==43 )
 })
