@@ -65,18 +65,18 @@ if (!is.null(condition)) {
     }
 }
 
-outres = nanoplen(data_file,
-                  metadata,
-                  opt$test,
-                  opt$baseline,
-                  opt$min_filter,
-                  opt$logscale,
-                  opt$params,
-                  opt$norm)
+outres = nanoplen(data_file = data_file,
+                  metadata = metadata,
+                  test = opt$test,
+                  baseline = opt$baseline,
+                  min_filter = opt$min_filter,
+                  logscale = opt$logscale,
+                  params = opt$params,
+                  norm = opt$norm)
 
 
 
-if opt$ofile == "stdout") {
+if (opt$ofile == "stdout") {
     write.table(outres, file=stdout(), sep = delim, quote = F, row.names = FALSE, col.names = TRUE)
 } else {
     write.table(outres, file = opt$ofile, sep = delim, quote = F, row.names = FALSE, col.names = TRUE)
