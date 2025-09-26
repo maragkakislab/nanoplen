@@ -9,6 +9,7 @@
 #'   \item {metadata}{Metadata with these columns in order: library id, condition, and any optional additional columns}
 #'   \item {test}{Type of statistical test: 't' for t-test, 'm' for linear mixed model, 'w' for Wilcoxon}
 #'   \item {baseline}{String that indicates the baseline variable for the 'condition' variable in the metadata}
+#'   \item {min_filter}{Minimum number of reads to be included in analysis}
 #'   \item {logscale}{ indicates if length should be on log2scale}
 #'   \item {params}{Extra parameters to use in the model, done in model notation (e.g. to add age and sex and their interaction to the model, the input is 'age+sex+age*sex') }
 #' }
@@ -42,6 +43,7 @@ nanoplen <- function(data_file,
                     metadata,
                     test = "t",
                     baseline = "Control",
+                    min_filter = 2,
                     logscale = FALSE,
                     params = NULL,
                     norm = FALSE
@@ -87,7 +89,7 @@ nanoplen <- function(data_file,
       data_file = within(data_file, condition <- relevel(factor(condition), ref = baseline))
     }
     
-    outres = diff_length(data_file, test, params, logscale, baseline)
+    outres = diff_length(data_file, test, params, min_filter, logscale, baseline)
     outres = cbind(rownames(outres),outres)
     colnames(outres)[1] = "name"
     

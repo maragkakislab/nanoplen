@@ -37,7 +37,7 @@ test_that('test_single_t_nolog', {
 
 test_that('test_single_t_extravars', {
     df = data_file[data_file$name == "gene_1",]
-    out = diff_length_single(df, "t",params = "zee")
+    expect_warning({out = diff_length_single(df, "t", params = "zee")})
     expect_equal(names(out), c("log2FC","pvalue"))
 })
 
@@ -71,25 +71,25 @@ test_that('test_single_bad', {
 }) 
 
 test_that('all_test_t', {
-    out = diff_length(data_file, "t", NULL, TRUE, "control")
+    out = diff_length(data_file, "t", NULL, logscale = TRUE, b = "control")
     expect_equal(nrow(out), 2)
     expect_equal(colnames(out), c("log2FC", "pvalue","qvalue","n.control","n.alt","mean_length.control","mean_length.alt"))
 })
 
 test_that('all_test_mix', {
-    out = diff_length(data_file, "m", NULL, TRUE, "control")
+    out = diff_length(data_file, "m", NULL, logscale = TRUE, b = "control")
     expect_equal(nrow(out), 2)
     expect_equal(colnames(out), c("log2FC", "pvalue","qvalue","n.control","n.alt","mean_length.control","mean_length.alt"))
 })
 
 test_that('all_test_w', {
-    out = diff_length(data_file, "w", NULL, TRUE, "control")
+    out = diff_length(data_file, "w", NULL, logscale = TRUE, b = "control")
     expect_equal(nrow(out), 2)
     expect_equal(colnames(out), c("Wilcox_stat","log2FC", "pvalue","qvalue","n.control","n.alt","mean_length.control","mean_length.alt"))
 })
 
 test_that('all_test_bad', {
-    expect_warning({out = diff_length(data_file_bad, "t", NULL, TRUE, "control")})
+    expect_warning({out = diff_length(data_file_bad, "t", NULL, min_filter = 1, logscale = TRUE, b = "control")})
     expect_equal(nrow(out), 3)
     expect_true(is.na(out[3,1]))
 })
@@ -102,21 +102,30 @@ test_that('test_single_t_value', {
 })
 
 test_that('test_single_t_value_reversebaseline', {
-    data_file_2 = within(data_file, condition <- relevel(condition, ref = "treated"))
-    df = data_file_2[data_file_2$name == "gene_2",]
-    out = diff_length_single(df, "t", logscale = FALSE, )
+  data_file_2 <- within(data_file, {
+    condition <- as.factor(condition)
+    condition <- relevel(condition, ref = "treated")
+  })
+  df = data_file_2[data_file_2$name == "gene_2",]
+    out = diff_length_single(df, "t", logscale = FALSE)
     expect_true(round(out["meandiff"],0)==43 )
 })
 
 test_that('test_nanoplen_t', {
-    outres = nanoplen(testdata, metadata, test = "t", baseline = "control", logscale = F)
+    outres = nanoplen(testdata, metadata, test = "t", min_filter = 3, baseline = "control", logscale = F)
     expect_equal(colnames(outres), c("name","meandiff","pvalue","qvalue","n.control","n.alt","mean_length.control","mean_length.alt"))
 })
 
 test_that('test_nanoplen_baselines', {
-    outres = nanoplen(testdata, metadata, test = "t", baseline = "control", logscale = F)
-    outres2 = nanoplen(testdata, metadata, test = "t", baseline = "treated", logscale = F)
+    outres = nanoplen(testdata, metadata, test = "t", min_filter = 3, baseline = "control", logscale = F)
+    outres2 = nanoplen(testdata, metadata, test = "t", min_filter = 3, baseline = "treated", logscale = F)
     
     expect_equal(outres[1:2,2], -outres2[1:2,2])
     expect_equal(outres[1:2,3], outres2[1:2,3])
+})
+
+test_that('all_test_min_filter', {
+    out = diff_length(data_file, "t", NULL, min_filter = 4, logscale = TRUE, b = "control")
+    expect_equal(nrow(out), 2)
+    expect_true(all(is.na(out[2,1:3])))
 })

@@ -17,6 +17,8 @@ option_list <- list(
                 help="Condition variable to test on [default uses second metadata column]"),
     make_option(c("-b","--baseline"), default = NULL,
                 help="String to specify baseline category"),
+    make_option(c("--min_filter"), default = 2,
+                help="Minimum number of reads to be included in analysis [default %default]"),
     make_option(c("-l","--logscale"), action = "store_true",  default=FALSE,
                 help="Convert length to log2 scale (TRUE/FALSE) [default %default]"),
     make_option(c("-p","--params"), default = NULL,
@@ -30,31 +32,28 @@ option_list <- list(
 )
 opt <- parse_args(OptionParser(option_list = option_list))
 
-vars = sapply(1:(length(option_list)), function(i) {substr(option_list[[i]]@long_flag,3,1000)})
-for (i in 1:length(vars)) {
-    assign(vars[i],opt[[vars[i]]])
-}
 delim <- "\t"  #Because this script is directly after nanoplen, we can control the output
 
-if (!(test %in% c("t","w","m","s"))) {
-    stop(sprintf("Unsupported test: %s. Accepted options: t, m, w, s", test))
+if (!(opt$test %in% c("t","w","m","s"))) {
+    stop(sprintf("Unsupported test: %s. Accepted options: t, m, w, s", opt$test))
 }
 
 # Input length data file and metadata file
-data_file <- read.delim(data_path, header = TRUE, sep = delim)
-metadata <- read.delim(metadata_path, header = TRUE, sep = delim)
+data_file <- read.delim(opt$data_path, header = TRUE, sep = delim)
+metadata <- read.delim(opt$metadata_path, header = TRUE, sep = delim)
 
-if (!is.null(filter_file)) {
-  filter_file = read.table(filter_file, header = F, sep = "\t", stringsAsFactors = F)
-  data_file = data_file[data_file[,2] %in% filter_file[,1],]
+if (!is.null(opt$filter_file)) {
+  filter_file = read.table(opt$filter_file, header = F, sep = "\t", stringsAsFactors = F)
+  data_file = data_file[data_file[,2] %in% opt$filter_file[,1],]
 }
 
 # Global variable. Low priority
 has_warning <<- FALSE
-wfile = ifelse(ofile == "stdout", "warnings.txt", sprintf("%s_warnings.txt", ofile))
+wfile = ifelse(opt$ofile == "stdout", "warnings.txt", sprintf("%s_warnings.txt", opt$ofile))
 ww <- file(wfile, open = "wt")
 sink(ww, type = "message")
 
+condition = opt$condition
 if (!is.null(condition)) {
     if (!(condition %in% colnames(metadata))) {
         stop("Condition variable not in metadata columns!")
@@ -66,20 +65,21 @@ if (!is.null(condition)) {
     }
 }
 
-outres = nanoplen(data_file,
-                  metadata,
-                  test,
-                  baseline,
-                  logscale,
-                  params,
-                  norm)
+outres = nanoplen(data_file = data_file,
+                  metadata = metadata,
+                  test = opt$test,
+                  baseline = opt$baseline,
+                  min_filter = opt$min_filter,
+                  logscale = opt$logscale,
+                  params = opt$params,
+                  norm = opt$norm)
 
 
 
-if (ofile == "stdout") {
+if (opt$ofile == "stdout") {
     write.table(outres, file=stdout(), sep = delim, quote = F, row.names = FALSE, col.names = TRUE)
 } else {
-    write.table(outres, file = ofile, sep = delim, quote = F, row.names = FALSE, col.names = TRUE)
+    write.table(outres, file = opt$ofile, sep = delim, quote = F, row.names = FALSE, col.names = TRUE)
 }
 
 sink(type="message")
