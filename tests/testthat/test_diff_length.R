@@ -83,13 +83,13 @@ test_that('all_test_mix', {
 })
 
 test_that('all_test_w', {
-    out = diff_length(data_file, "w", NULL, TRUE, "control")
+    out = diff_length(data_file, "w", NULL, logscale = TRUE, b = "control")
     expect_equal(nrow(out), 2)
     expect_equal(colnames(out), c("Wilcox_stat","log2FC", "pvalue","qvalue","n.control","n.alt","mean_length.control","mean_length.alt"))
 })
 
 test_that('all_test_bad', {
-    expect_warning({out = diff_length(data_file_bad, "t", NULL, TRUE, "control")})
+    expect_warning({out = diff_length(data_file_bad, "t", NULL, logscale = TRUE, b = "control")})
     expect_equal(nrow(out), 2)
     expect_true(is.na(out[3,1]))
 })
