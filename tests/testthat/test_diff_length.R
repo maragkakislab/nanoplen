@@ -112,13 +112,13 @@ test_that('test_single_t_value_reversebaseline', {
 })
 
 test_that('test_nanoplen_t', {
-    outres = nanoplen(testdata, metadata, test = "t", baseline = "control", logscale = F)
+    outres = nanoplen(testdata, metadata, test = "t", min_filter = 3, baseline = "control", logscale = F)
     expect_equal(colnames(outres), c("name","meandiff","pvalue","qvalue","n.control","n.alt","mean_length.control","mean_length.alt"))
 })
 
 test_that('test_nanoplen_baselines', {
-    outres = nanoplen(testdata, metadata, test = "t", baseline = "control", logscale = F)
-    outres2 = nanoplen(testdata, metadata, test = "t", baseline = "treated", logscale = F)
+    outres = nanoplen(testdata, metadata, test = "t", min_filter = 3, baseline = "control", logscale = F)
+    outres2 = nanoplen(testdata, metadata, test = "t", min_filter = 3, baseline = "treated", logscale = F)
     
     expect_equal(outres[1:2,2], -outres2[1:2,2])
     expect_equal(outres[1:2,3], outres2[1:2,3])
