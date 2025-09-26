@@ -1,4 +1,4 @@
-diff_length_single = function(data_file_sub, test, params = NULL, logscale = TRUE, contig_name = "") {
+diff_length_single = function(data_file_sub, test, params = NULL, min_filter = 30, logscale = TRUE, contig_name = "") {
     out = c(NA,NA)
     if (is.null(params)) {
         model = "length~condition"
@@ -85,13 +85,18 @@ calc_descriptives = function(df, p=2) {
     return(out)
 }
 
-diff_length = function(data_file, test, params, logscale, b = baseline) {
+diff_length = function(data_file, test, params, min_filter = 30, logscale, b = baseline) {
     data_file_byname = split(data_file, data_file$name)
 
     # Loops over all subsets split by name
     out = lapply(names(data_file_byname),
                  function(d) {diff_length_single(
-                     data_file_byname[[d]], test, params, logscale, d)})
+                     data_file_sub = data_file_byname[[d]], 
+                     test = test, 
+                     params = params, 
+                     min_filter = min_filter, 
+                     logscale = logscale, 
+                     contig_name = d)})
     suppressWarnings({out = data.frame(do.call(rbind, out))})
     rownames(out) = names(data_file_byname)
     out$qvalue = p.adjust(out$pvalue,method = "BH")
