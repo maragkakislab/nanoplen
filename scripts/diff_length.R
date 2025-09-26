@@ -17,7 +17,7 @@ option_list <- list(
                 help="Condition variable to test on [default uses second metadata column]"),
     make_option(c("-b","--baseline"), default = NULL,
                 help="String to specify baseline category"),
-    make_option(c("--min_filter"), default = 30,
+    make_option(c("--min_filter"), default = 2,
                 help="Minimum number of reads to be included in analysis [default %default]"),
     make_option(c("-l","--logscale"), action = "store_true",  default=FALSE,
                 help="Convert length to log2 scale (TRUE/FALSE) [default %default]"),

@@ -126,5 +126,6 @@ test_that('test_nanoplen_baselines', {
 
 test_that('all_test_min_filter', {
     out = diff_length(data_file, "t", NULL, min_filter = 4, logscale = TRUE, b = "control")
-    expect_equal(nrow(out), 1)
+    expect_equal(nrow(out), 2)
+    expect_true(all(is.na(out[2,1:3])))
 })
