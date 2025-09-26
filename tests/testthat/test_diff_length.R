@@ -107,7 +107,7 @@ test_that('test_single_t_value_reversebaseline', {
     condition <- relevel(condition, ref = "treated")
   })
   df = data_file_2[data_file_2$name == "gene_2",]
-    out = diff_length_single(df, "t", logscale = FALSE, )
+    out = diff_length_single(df, "t", logscale = FALSE)
     expect_true(round(out["meandiff"],0)==43 )
 })
 
