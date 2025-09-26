@@ -43,7 +43,7 @@ nanoplen <- function(data_file,
                     metadata,
                     test = "t",
                     baseline = "Control",
-                    min_filter = 3,
+                    min_filter = 30,
                     logscale = FALSE,
                     params = NULL,
                     norm = FALSE
