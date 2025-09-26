@@ -37,7 +37,7 @@ test_that('test_single_t_nolog', {
 
 test_that('test_single_t_extravars', {
     df = data_file[data_file$name == "gene_1",]
-    out = diff_length_single(df, "t",params = "zee")
+    expect_warning({out = diff_length_single(df, "t", params = "zee")})
     expect_equal(names(out), c("log2FC","pvalue"))
 })
 
