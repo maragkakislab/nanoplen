@@ -3,7 +3,7 @@ diff_length_single = function(data_file_sub, test, params = NULL, min_filter = 3
     if (is.null(params)) {
         model = "length~condition"
     } else {
-        model = paste(c("length~condition",params),sep="+")
+        model = paste(c("length~condition",params),collapse="+")
     }
     if (logscale) {
         data_file_sub$length = log2(data_file_sub$length)
