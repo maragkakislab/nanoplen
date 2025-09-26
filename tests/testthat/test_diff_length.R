@@ -71,13 +71,13 @@ test_that('test_single_bad', {
 }) 
 
 test_that('all_test_t', {
-    out = diff_length(data_file, "t", NULL, TRUE, "control")
+    out = diff_length(data_file, "t", NULL, logscale = TRUE, b = "control")
     expect_equal(nrow(out), 2)
     expect_equal(colnames(out), c("log2FC", "pvalue","qvalue","n.control","n.alt","mean_length.control","mean_length.alt"))
 })
 
 test_that('all_test_mix', {
-    out = diff_length(data_file, "m", NULL, TRUE, "control")
+    out = diff_length(data_file, "m", NULL, logscale = TRUE, b = "control")
     expect_equal(nrow(out), 2)
     expect_equal(colnames(out), c("log2FC", "pvalue","qvalue","n.control","n.alt","mean_length.control","mean_length.alt"))
 })

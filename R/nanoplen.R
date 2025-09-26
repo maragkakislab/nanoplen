@@ -89,7 +89,7 @@ nanoplen <- function(data_file,
       data_file = within(data_file, condition <- relevel(factor(condition), ref = baseline))
     }
     
-    outres = diff_length(data_file, test, params, logscale, baseline)
+    outres = diff_length(data_file, test, params, min_filter, logscale, baseline)
     outres = cbind(rownames(outres),outres)
     colnames(outres)[1] = "name"
     
