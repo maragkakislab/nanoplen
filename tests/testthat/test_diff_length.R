@@ -90,7 +90,7 @@ test_that('all_test_w', {
 
 test_that('all_test_bad', {
     expect_warning({out = diff_length(data_file_bad, "t", NULL, min_filter = 1, logscale = TRUE, b = "control")})
-    expect_equal(nrow(out), 2)
+    expect_equal(nrow(out), 3)
     expect_true(is.na(out[3,1]))
 })
 
