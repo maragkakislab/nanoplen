@@ -89,7 +89,7 @@ test_that('all_test_w', {
 })
 
 test_that('all_test_bad', {
-    expect_warning({out = diff_length(data_file_bad, "t", NULL, logscale = TRUE, b = "control")})
+    expect_warning({out = diff_length(data_file_bad, "t", NULL, min_filter = 1, logscale = TRUE, b = "control")})
     expect_equal(nrow(out), 2)
     expect_true(is.na(out[3,1]))
 })
@@ -122,4 +122,9 @@ test_that('test_nanoplen_baselines', {
     
     expect_equal(outres[1:2,2], -outres2[1:2,2])
     expect_equal(outres[1:2,3], outres2[1:2,3])
+})
+
+test_that('all_test_min_filter', {
+    out = diff_length(data_file, "t", NULL, min_filter = 4, logscale = TRUE, b = "control")
+    expect_equal(nrow(out), 1)
 })

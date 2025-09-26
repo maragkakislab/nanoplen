@@ -90,7 +90,7 @@ diff_length = function(data_file, test, params, min_filter = 3, logscale = logsc
 
     # Filter for minimum number of reads
     data_file_byname = data_file_byname[sapply(data_file_byname, function(df) {
-      all(table(df$condition > min_filter))
+      all(table(df$condition) >= min_filter)
     })]
 
     # Loops over all subsets split by name
